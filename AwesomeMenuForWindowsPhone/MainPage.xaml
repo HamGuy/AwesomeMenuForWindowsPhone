@@ -22,7 +22,7 @@
 
         <!--TitlePanel 包含应用程序的名称和页标题-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="ApplicationTitle" Text="AwsomeMenu By HamGuy" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock x:Name="ApplicationTitle" Text="AwesomeMenu By HamGuy" Style="{StaticResource PhoneTextNormalStyle}"/>
         </StackPanel>
 
         <!--ContentPanel - 在此处放置其他内容-->
