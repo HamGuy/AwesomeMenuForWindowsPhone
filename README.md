@@ -1,7 +1,7 @@
 AwesomeMenuForWindowsPhone
 ==========================
 
-AwesomeMenu for Windows Phone, which was coding with C# based on the levey's AwesomeMenu(https://github.com/levey/AwesomeMenu/")
+AwesomeMenu for Windows Phone, which was coding with C# based on the levey's QuadCurveMenu(https://github.com/levey/QuadCurveMenu/") and the extention QuadcurveMenu by 念风2012 (http://blog.csdn.net/toss156/article/details/7385517)
 Thanks for the sharing!
 
 There are some bugs now ,
