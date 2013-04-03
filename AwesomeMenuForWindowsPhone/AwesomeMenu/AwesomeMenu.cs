@@ -30,7 +30,7 @@ namespace AwesomeMenuForWindowsPhone
         #region Private Fileds
         private List<AwesomMenuItem> MenuItems;
         private int _flag = 0;
-        private AwesomeMenuType Type
+        protect AwesomeMenuType Type
         {
             get { return _type; }
             set
@@ -51,7 +51,7 @@ namespace AwesomeMenuForWindowsPhone
         private string _addUri;
         private string _addUriHighlited;
         private bool _isExpanding;
-        private bool IsExpanding
+        protect bool IsExpanding
         {
             get { return _isExpanding; }
             set
