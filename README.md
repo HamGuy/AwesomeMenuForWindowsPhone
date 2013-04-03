@@ -5,10 +5,11 @@ AwesomeMenuForWindowsPhone
 
 Update at 2013-04-04
 
-fix the the metioned bugs yesterday by Mr_more (matong38@gmail.com).
+fix the the mentioned bugs yesterday by Mr_more (matong38@gmail.com).
 
 Thanks for the hekp of Mr_more!
 
+The MainPage.xaml.cs showed how to use it. 
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 2013-04-03
