@@ -2,6 +2,7 @@ AwesomeMenuForWindowsPhone
 ==========================
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 Update at 2013-04-04
 fix the the metioned bugs yesterday by Mr_more (matong38@gmail.com).
 
@@ -26,5 +27,9 @@ And I need your help, thank you very much!
 ===========================================
 
 HamGuy
+
 @HamGuy(Http://twitter.com/small2)
+
 http://www.hamguy.info/
+
+wangrui15@gmail.com
