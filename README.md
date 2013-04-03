@@ -4,6 +4,7 @@ AwesomeMenuForWindowsPhone
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Update at 2013-04-04
+
 fix the the metioned bugs yesterday by Mr_more (matong38@gmail.com).
 
 Thanks for the hekp of Mr_more!
