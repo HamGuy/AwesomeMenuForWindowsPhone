@@ -30,7 +30,7 @@ namespace AwesomeMenuForWindowsPhone
         #region Private Fileds
         private List<AwesomMenuItem> MenuItems;
         private int _flag = 0;
-        protect AwesomeMenuType Type
+        protected AwesomeMenuType Type
         {
             get { return _type; }
             set
@@ -51,7 +51,7 @@ namespace AwesomeMenuForWindowsPhone
         private string _addUri;
         private string _addUriHighlited;
         private bool _isExpanding;
-        protect bool IsExpanding
+        protected bool IsExpanding
         {
             get { return _isExpanding; }
             set
@@ -59,15 +59,15 @@ namespace AwesomeMenuForWindowsPhone
                 _isExpanding = value;
                 SetExpanding(_isExpanding);
             }
-        } 
+        }
         #endregion
 
         #region Actions
         public Action<AwesomeMenu, int> ActionDisMiss;
         public Action<AwesomMenuItem> ActionItemOpen;
-        public Action<AwesomMenuItem> ActionItemClose; 
+        public Action<AwesomMenuItem> ActionItemClose;
         #endregion
-        
+
         public AwesomeMenu(Rect rect, List<AwesomMenuItem> menuItems, string addUri, string addUriHigtlighted)
         {
             this.Width = rect.Width;
@@ -76,12 +76,12 @@ namespace AwesomeMenuForWindowsPhone
             this._addUri = addUri;
             this._addUriHighlited = addUriHigtlighted;
             //this.MouseLeftButtonUp += Menu_MouseLeftButtonUp;
+            this.Background = new SolidColorBrush(Colors.Transparent);
+            this.Tap -= AwesomeMenu_Tap;
             this.Tap += AwesomeMenu_Tap;
             InitAddButton();
             InitMenuItem();
         }
-
-
 
         #region Public Methods
         public void SetType(AwesomeMenuType menuType)
@@ -156,7 +156,7 @@ namespace AwesomeMenuForWindowsPhone
             _startPoint = pt;
             _addButton.ItemTransfrom.CenterX = _startPoint.X;
             _addButton.ItemTransfrom.CenterY = _startPoint.Y;
-        } 
+        }
         #endregion
 
         #region Private methods
@@ -173,7 +173,8 @@ namespace AwesomeMenuForWindowsPhone
                     item.NearPoint = CalulateInitPoint(i, NEAR_RADIUS, nCount);
                     item.FarPoint = CalulateInitPoint(i, FAR_RADIUS, nCount);
                     item.Tag = i;
-                    item.Click += Item_Clicked;
+                    item.ClickMenuItem -= Item_ClickMenuItem;
+                    item.ClickMenuItem += Item_ClickMenuItem;
                     item.ItemTransfrom.CenterX = START_POINT.X;
                     item.ItemTransfrom.CenterY = START_POINT.Y;
 
@@ -189,7 +190,8 @@ namespace AwesomeMenuForWindowsPhone
             _addButton.ItemTransfrom.TranslateX = _startPoint.Y;
             _addButton.Tag = 999;
             Canvas.SetZIndex(_addButton, 10);
-            _addButton.Click += Item_Clicked;
+            _addButton.ClickMenuItem -= Item_ClickMenuItem;
+            _addButton.ClickMenuItem += Item_ClickMenuItem;
             this.Children.Add(_addButton);
         }
 
@@ -323,13 +325,19 @@ namespace AwesomeMenuForWindowsPhone
             }
 
             int tag = _flag;
-            AwesomMenuItem item=null;
-            if (tag >= MenuItems.Count)
+            AwesomMenuItem item = null;
+            //if (tag >= MenuItems.Count)
+            //{
+            //    item = _addButton;
+            //}
+            //else
+            //item = MenuItems[tag];
+
+            if (tag - 1 < 0)
             {
-                item = _addButton;
+                return;
             }
-                else
-             item = MenuItems[tag];
+            item = MenuItems[tag - 1];
 
             Duration duration = TimeSpan.FromSeconds(0.5);
 
@@ -345,7 +353,7 @@ namespace AwesomeMenuForWindowsPhone
             da.KeyFrames.Add(keyframe);
 
             keyframe = new EasingDoubleKeyFrame();
-            keyframe.Value = 90;
+            keyframe.Value = 180;
             keyframe.KeyTime = TimeSpan.FromSeconds(0.25);
             da.KeyFrames.Add(keyframe);
 
@@ -469,10 +477,16 @@ namespace AwesomeMenuForWindowsPhone
         {
             // Confilct with the menuitem T_T
             //if (_isExpanding)
+            //{
             //    _isExpanding = false;
+            //}
+            if (this.IsExpanding)
+            {
+                this.IsExpanding = false;
+            }
         }
 
-        private void Item_Clicked(AwesomMenuItem item)
+        private void Item_ClickMenuItem(AwesomMenuItem item)
         {
             if (item.Tag.Equals(_addButton.Tag))
             {
@@ -486,8 +500,8 @@ namespace AwesomeMenuForWindowsPhone
             blowUpStory.Begin();
             blowUpStory.Completed += (o, a) =>
             {
-                item.ItemTransfrom.TranslateX = pt.X;
-                item.ItemTransfrom.TranslateY = pt.Y;
+                item.ItemTransfrom.TranslateX = 0;
+                item.ItemTransfrom.TranslateY = 0;
                 item.ItemTransfrom.ScaleX = 1;
                 item.ItemTransfrom.ScaleY = 1;
                 item.Opacity = 1;
@@ -496,33 +510,34 @@ namespace AwesomeMenuForWindowsPhone
                 blowUpStory = null;
             };
 
-
             foreach (var otherItem in MenuItems)
             {
-                if (item == otherItem)
-                    continue;
-                Point p = new Point(otherItem.ItemTransfrom.TranslateX, otherItem.ItemTransfrom.TranslateY);
-                var shrinkStory = GetShrinkAnimation(otherItem, p);
-                shrinkStory.Begin();
-                shrinkStory.Completed += (o, a) =>
+                if (item != otherItem)
                 {
-                    otherItem.ItemTransfrom.TranslateX = pt.X;
-                    otherItem.ItemTransfrom.TranslateY = pt.Y;
-                    otherItem.ItemTransfrom.ScaleX = 1;
-                    otherItem.ItemTransfrom.ScaleY = 1;
-                    otherItem.Opacity = 1;
-                    shrinkStory.Stop();
-                    shrinkStory.Children.Clear();
-                    shrinkStory = null;
-                };
+                    Point p = new Point(otherItem.ItemTransfrom.TranslateX, otherItem.ItemTransfrom.TranslateY);
+                    var shrinkStory = GetShrinkAnimation(otherItem, p);
+                    shrinkStory.Begin();
+                    shrinkStory.Completed += (o, a) =>
+                    {
+                        otherItem.ItemTransfrom.TranslateX = 0;
+                        otherItem.ItemTransfrom.TranslateY = 0;
+                        otherItem.ItemTransfrom.ScaleX = 1;
+                        otherItem.ItemTransfrom.ScaleY = 1;
+                        otherItem.Opacity = 1;
+                        shrinkStory.Stop();
+                        shrinkStory.Children.Clear();
+                        shrinkStory = null;
+                    };
+                }
             }
             _isExpanding = false;
 
             double angle = this.IsExpanding ? -Math.PI / 4 : 0;
             Duration duration = TimeSpan.FromSeconds(0.2);
+            _addButton.RenderTransformOrigin = new Point(0.5, 0.5);
             var da = GetDoubleAnimation(duration, _addButton.ItemTransfrom.Rotation, angle);
             var sb = new Storyboard();
-            sb.Duration = duration;
+            //sb.Duration = duration;
             Storyboard.SetTarget(da, _addButton.ItemTransfrom);
             Storyboard.SetTargetProperty(da, new PropertyPath(CompositeTransform.RotationProperty));
             sb.Begin();
@@ -538,7 +553,7 @@ namespace AwesomeMenuForWindowsPhone
             if (ActionDisMiss != null)
                 ActionDisMiss(this, Convert.ToInt32(item.Tag));
 
-        }  
+        }
         #endregion
 
         #region Helper Methods
@@ -664,7 +679,7 @@ namespace AwesomeMenuForWindowsPhone
             da.To = to;
             da.EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut };
             return da;
-        } 
+        }
         #endregion
     }
 }
