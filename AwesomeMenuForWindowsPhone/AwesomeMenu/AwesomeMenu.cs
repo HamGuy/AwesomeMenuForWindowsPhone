@@ -60,7 +60,17 @@ namespace AwesomeMenuForWindowsPhone
                 SetExpanding(_isExpanding);
             }
         }
+        private bool _tapToDismissItem = false;
         #endregion
+
+        /// <summary>
+        /// Indicator whether dismiss the menuitem when tapped
+        /// </summary>
+        public bool TapToDissmissItem
+        {
+            get { return _tapToDismissItem; }
+            set { _tapToDismissItem = value; }
+        }
 
         #region Actions
         public Action<AwesomeMenu, int> ActionDisMiss;
@@ -494,60 +504,63 @@ namespace AwesomeMenuForWindowsPhone
                 return;
             }
 
-            //blowup current button
-            Point pt = new Point(item.ItemTransfrom.TranslateX, item.ItemTransfrom.TranslateY);
-            var blowUpStory = GetBlowUpAnimation(item, pt);
-            blowUpStory.Begin();
-            blowUpStory.Completed += (o, a) =>
+            if (!TapToDissmissItem)
             {
-                item.ItemTransfrom.TranslateX = 0;
-                item.ItemTransfrom.TranslateY = 0;
-                item.ItemTransfrom.ScaleX = 1;
-                item.ItemTransfrom.ScaleY = 1;
-                item.Opacity = 1;
-                blowUpStory.Stop();
-                blowUpStory.Children.Clear();
-                blowUpStory = null;
-            };
-
-            foreach (var otherItem in MenuItems)
-            {
-                if (item != otherItem)
+                //blowup current button
+                Point pt = new Point(item.ItemTransfrom.TranslateX, item.ItemTransfrom.TranslateY);
+                var blowUpStory = GetBlowUpAnimation(item, pt);
+                blowUpStory.Begin();
+                blowUpStory.Completed += (o, a) =>
                 {
-                    Point p = new Point(otherItem.ItemTransfrom.TranslateX, otherItem.ItemTransfrom.TranslateY);
-                    var shrinkStory = GetShrinkAnimation(otherItem, p);
-                    shrinkStory.Begin();
-                    shrinkStory.Completed += (o, a) =>
-                    {
-                        otherItem.ItemTransfrom.TranslateX = 0;
-                        otherItem.ItemTransfrom.TranslateY = 0;
-                        otherItem.ItemTransfrom.ScaleX = 1;
-                        otherItem.ItemTransfrom.ScaleY = 1;
-                        otherItem.Opacity = 1;
-                        shrinkStory.Stop();
-                        shrinkStory.Children.Clear();
-                        shrinkStory = null;
-                    };
-                }
-            }
-            _isExpanding = false;
+                    item.ItemTransfrom.TranslateX = 0;
+                    item.ItemTransfrom.TranslateY = 0;
+                    item.ItemTransfrom.ScaleX = 1;
+                    item.ItemTransfrom.ScaleY = 1;
+                    item.Opacity = 1;
+                    blowUpStory.Stop();
+                    blowUpStory.Children.Clear();
+                    blowUpStory = null;
+                };
 
-            double angle = this.IsExpanding ? -Math.PI / 4 : 0;
-            Duration duration = TimeSpan.FromSeconds(0.2);
-            _addButton.RenderTransformOrigin = new Point(0.5, 0.5);
-            var da = GetDoubleAnimation(duration, _addButton.ItemTransfrom.Rotation, angle);
-            var sb = new Storyboard();
-            //sb.Duration = duration;
-            Storyboard.SetTarget(da, _addButton.ItemTransfrom);
-            Storyboard.SetTargetProperty(da, new PropertyPath(CompositeTransform.RotationProperty));
-            sb.Begin();
-            sb.Completed += (o, a) =>
-            {
-                sb.Stop();
-                _addButton.ItemTransfrom.Rotation = angle;
-                sb.Children.Clear();
-                sb = null;
-            };
+                foreach (var otherItem in MenuItems)
+                {
+                    if (item != otherItem)
+                    {
+                        Point p = new Point(otherItem.ItemTransfrom.TranslateX, otherItem.ItemTransfrom.TranslateY);
+                        var shrinkStory = GetShrinkAnimation(otherItem, p);
+                        shrinkStory.Begin();
+                        shrinkStory.Completed += (o, a) =>
+                        {
+                            otherItem.ItemTransfrom.TranslateX = 0;
+                            otherItem.ItemTransfrom.TranslateY = 0;
+                            otherItem.ItemTransfrom.ScaleX = 1;
+                            otherItem.ItemTransfrom.ScaleY = 1;
+                            otherItem.Opacity = 1;
+                            shrinkStory.Stop();
+                            shrinkStory.Children.Clear();
+                            shrinkStory = null;
+                        };
+                    }
+                }
+                _isExpanding = false;
+
+                double angle = this.IsExpanding ? -Math.PI / 4 : 0;
+                Duration duration = TimeSpan.FromSeconds(0.2);
+                _addButton.RenderTransformOrigin = new Point(0.5, 0.5);
+                var da = GetDoubleAnimation(duration, _addButton.ItemTransfrom.Rotation, angle);
+                var sb = new Storyboard();
+                //sb.Duration = duration;
+                Storyboard.SetTarget(da, _addButton.ItemTransfrom);
+                Storyboard.SetTargetProperty(da, new PropertyPath(CompositeTransform.RotationProperty));
+                sb.Begin();
+                sb.Completed += (o, a) =>
+                {
+                    sb.Stop();
+                    _addButton.ItemTransfrom.Rotation = angle;
+                    sb.Children.Clear();
+                    sb = null;
+                };
+            }
 
 
             if (ActionDisMiss != null)
