@@ -94,7 +94,7 @@ namespace AwesomeMenuForWindowsPhone
         }
 
         #region Public Methods
-        public void SetType(AwesomeMenuType menuType)
+        public void SetType(AwesomeMenuType menuType = AwesomeMenuType.AwesomeMenuTypeDefault)
         {
             Type = menuType;
             int dx = 1;
@@ -150,9 +150,10 @@ namespace AwesomeMenuForWindowsPhone
                     }
                     else
                     {
-                        item.EndPoint = new Point(_startPoint.X + dx * i * BETWEEN_RADIUS, _startPoint.Y + dy * i * BETWEEN_RADIUS);
-                        item.NearPoint = new Point(_startPoint.X + dx * i * (BETWEEN_RADIUS - 15), _startPoint.Y + dy * i * (BETWEEN_RADIUS - 15));
-                        item.FarPoint = new Point(_startPoint.X + dx * i * (BETWEEN_RADIUS + 20), _startPoint.Y + dy * i * (BETWEEN_RADIUS + 20));
+                        var j = i + 1;
+                        item.EndPoint = new Point(_startPoint.X + dx * j * BETWEEN_RADIUS, _startPoint.Y + dy * j * BETWEEN_RADIUS);
+                        item.NearPoint = new Point(_startPoint.X + dx * j * (BETWEEN_RADIUS - 15), _startPoint.Y + dy * j * (BETWEEN_RADIUS - 15));
+                        item.FarPoint = new Point(_startPoint.X + dx * j * (BETWEEN_RADIUS + 20), _startPoint.Y + dy * j * (BETWEEN_RADIUS + 20));
                     }
                     item.ItemTransfrom.CenterX = item.StratPoint.X;
                     item.ItemTransfrom.CenterY = item.StratPoint.Y;
@@ -590,8 +591,8 @@ namespace AwesomeMenuForWindowsPhone
         Point CalulateDynamaticPoint(int index, double radius, int nCount, int dx, int dy)
         {
             return new Point(
-                        _startPoint.X + dx + radius * Math.Sin(index * Math.PI / 2 / (nCount - 1)),
-                        _startPoint.Y - dy - radius * Math.Cos(index * Math.PI / 2 / (nCount - 1))
+                        _startPoint.X + dx * radius * Math.Sin(index * Math.PI / 2 / (nCount - 1)),
+                        _startPoint.Y - dy * radius * Math.Cos(index * Math.PI / 2 / (nCount - 1))
                         );
         }
 

@@ -49,7 +49,8 @@ namespace AwesomeMenuForWindowsPhone
 
             var menu = new AwesomeMenu(rc, items, "Images/icon-plus.png", "Images/bg-addbutton.png");
 
-            menu.SetType(AwesomeMenuType.AwesomeMenuTypeDownAndLeft);
+            //menu.SetType(AwesomeMenuType.AwesomeMenuTypeDownAndLeft);
+            menu.SetType(AwesomeMenuType.AwesomeMenuTypeDownAndRight);
             menu.SetStartPoint(new Point(50, 50));
             ContentPanel.Children.Add(menu);
         }
