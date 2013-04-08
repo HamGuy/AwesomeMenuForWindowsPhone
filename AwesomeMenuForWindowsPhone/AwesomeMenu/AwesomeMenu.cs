@@ -39,7 +39,7 @@ namespace AwesomeMenuForWindowsPhone
             }
         }
         private Point _startPoint;
-        private AwesomeMenuType _type;
+        private AwesomeMenuType _type = AwesomeMenuType.AwesomeMenuTypeDefault;
         private Point START_POINT = new Point(100, 130);
         private const double NEAR_RADIUS = 130d;
         private const double END_RADIUS = 140d;
@@ -78,7 +78,7 @@ namespace AwesomeMenuForWindowsPhone
         public Action<AwesomMenuItem> ActionItemClose;
         #endregion
 
-        public AwesomeMenu(Rect rect, List<AwesomMenuItem> menuItems, string addUri, string addUriHigtlighted)
+        public AwesomeMenu(Rect rect, List<AwesomMenuItem> menuItems, string addUri, string addUriHigtlighted, AwesomeMenuType menuType = AwesomeMenuType.AwesomeMenuTypeDefault)
         {
             this.Width = rect.Width;
             this.Height = rect.Height;
@@ -91,6 +91,7 @@ namespace AwesomeMenuForWindowsPhone
             this.Tap += AwesomeMenu_Tap;
             InitAddButton();
             InitMenuItem();
+            SetType(menuType);
         }
 
         #region Public Methods
@@ -172,6 +173,7 @@ namespace AwesomeMenuForWindowsPhone
             _startPoint = pt;
             _addButton.ItemTransfrom.CenterX = _startPoint.X;
             _addButton.ItemTransfrom.CenterY = _startPoint.Y;
+            //_addButton.ItemTransfrom.CenterX = _addButton.ItemTransfrom.CenterY = 0.5;
         }
         #endregion
 
@@ -203,7 +205,7 @@ namespace AwesomeMenuForWindowsPhone
         {
             _addButton = new AwesomMenuItem(_addUri, _addUriHighlited);
             _addButton.ItemTransfrom.TranslateX = _startPoint.X;
-            _addButton.ItemTransfrom.TranslateX = _startPoint.Y;
+            _addButton.ItemTransfrom.TranslateY = _startPoint.Y;
             _addButton.Tag = 999;
             Canvas.SetZIndex(_addButton, 10);
             _addButton.ClickMenuItem -= Item_ClickMenuItem;
