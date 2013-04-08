@@ -10,6 +10,6 @@ namespace AwesomeMenuForWindowsPhone
         AwesomeMenuRadian90 = 90,
         AwesomeMenuRadian180 = 180,
         AwesomeMenuRadian360 = 360,
-        AwesomeMenuTypeRadian = AwesomeMenuRadian90
+        AwesomeMenuRadianNone = 0
     }
 }

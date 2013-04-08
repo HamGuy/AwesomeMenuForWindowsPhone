@@ -51,9 +51,11 @@ namespace AwesomeMenuForWindowsPhone
 
             //构造的时候可以设置指定方法也可以通过方法来设置，都可以
             var menu = new AwesomeMenu(rc, items, "Images/icon-plus.png", "Images/bg-addbutton.png", AwesomeMenuType.AwesomeMenuTypeDownAndLeft);
-            
+                        
             menu.SetType(AwesomeMenuType.AwesomeMenuTypeUpAndLeft);
-            menu.SetStartPoint(new Point(150, 50));
+            //menu.SetStartPoint(new Point(150, 50));
+            //menu.AwesomeMenuRadianType = AwesomeMenuRadianType.AwesomeMenuRadian180;
+            //menu.MenuItemSpacing = 50;
             ContentPanel.Children.Add(menu);
         }
     }

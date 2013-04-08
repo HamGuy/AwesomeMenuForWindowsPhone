@@ -61,6 +61,41 @@ namespace AwesomeMenuForWindowsPhone
             }
         }
         private bool _tapToDismissItem = false;
+
+        private AwesomeMenuRadianType awesomeMenuRadianType = AwesomeMenuRadianType.AwesomeMenuRadian90;
+        /// <summary>
+        /// 设置按钮以多少度展现
+        /// </summary>
+        public AwesomeMenuRadianType AwesomeMenuRadianType
+        {
+            get
+            {
+                return awesomeMenuRadianType;
+            }
+            set
+            {
+                awesomeMenuRadianType = value;
+                ConversionMenuItemSpacing();
+                SetType(Type);
+            }
+        }
+
+        private double menuItemSpacing = 0.0;
+        /// <summary>
+        /// 每个Item的间距
+        /// </summary>
+        public double MenuItemSpacing
+        {
+            get
+            {
+                return menuItemSpacing;
+            }
+            set
+            {
+                menuItemSpacing = value;
+                SetType(Type);
+            }
+        }
         #endregion
 
         /// <summary>
@@ -92,6 +127,7 @@ namespace AwesomeMenuForWindowsPhone
             InitAddButton();
             InitMenuItem();
             SetType(menuType);
+            this.AwesomeMenuRadianType = AwesomeMenuForWindowsPhone.AwesomeMenuRadianType.AwesomeMenuRadian90;
         }
 
         #region Public Methods
@@ -494,6 +530,37 @@ namespace AwesomeMenuForWindowsPhone
                 _timer.Start();
             }
         }
+
+        /// <summary>
+        /// 计算角度
+        /// </summary>
+        private void ConversionMenuItemSpacing()
+        {
+            switch (this.AwesomeMenuRadianType)
+            {
+                case AwesomeMenuRadianType.AwesomeMenuRadian90:
+                    {
+                        this.MenuItemSpacing = (90 / (MenuItems.Count - 1));
+                    }
+                    break;
+                case AwesomeMenuRadianType.AwesomeMenuRadian180:
+                    {
+                        this.MenuItemSpacing = (180 / (MenuItems.Count - 1));
+                    }
+                    break;
+                case AwesomeMenuRadianType.AwesomeMenuRadian360:
+                    {
+                        this.MenuItemSpacing = (360 / (MenuItems.Count - 1));
+                    }
+                    break;
+                default:
+                    if (this.MenuItemSpacing == 0.0 || double.IsNaN(this.MenuItemSpacing))
+                    {
+                        this.MenuItemSpacing = (90 / (MenuItems.Count - 1));
+                    }
+                    break;
+            }
+        }
         #endregion
 
         #region Event Handler
@@ -601,9 +668,13 @@ namespace AwesomeMenuForWindowsPhone
 
         Point CalulateDynamaticPoint(int index, double radius, int nCount, int dx, int dy)
         {
+            //return new Point(
+            //            _startPoint.X + dx * radius * Math.Sin(index * Math.PI / 2 / (nCount - 1)),
+            //            _startPoint.Y + dy * radius * Math.Cos(index * Math.PI / 2 / (nCount - 1))
+            //            );
             return new Point(
-                        _startPoint.X + dx * radius * Math.Sin(index * Math.PI / 2 / (nCount - 1)),
-                        _startPoint.Y + dy * radius * Math.Cos(index * Math.PI / 2 / (nCount - 1))
+                        _startPoint.X + dx * radius * Math.Sin(index * Math.PI * MenuItemSpacing / 180),
+                        _startPoint.Y + dy * radius * Math.Cos(index * Math.PI * MenuItemSpacing / 180)
                         );
         }
 
