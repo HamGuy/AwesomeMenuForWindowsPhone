@@ -170,10 +170,14 @@ namespace AwesomeMenuForWindowsPhone
 
         public void SetStartPoint(Point pt)
         {
-            _startPoint = pt;
+            this.Children.Clear();
+            InitAddButton();
+            _startPoint = START_POINT = pt;
             _addButton.ItemTransfrom.TranslateX = _startPoint.X;
             _addButton.ItemTransfrom.TranslateY = _startPoint.Y;
             //_addButton.ItemTransfrom.CenterX = _addButton.ItemTransfrom.CenterY = 0.5;
+            InitMenuItem();
+            SetType(Type);
         }
         #endregion
 
