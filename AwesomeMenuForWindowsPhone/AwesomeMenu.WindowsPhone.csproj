@@ -62,6 +62,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AwesomeMenu\AwesomeMenu.cs" />
+    <Compile Include="AwesomeMenu\AwesomeMenuRadianType.cs" />
     <Compile Include="AwesomeMenu\AwesomeMenuType.cs" />
     <Compile Include="AwesomeMenu\AwesomMenuItem.cs" />
     <Compile Include="MainPage.xaml.cs">

@@ -161,8 +161,8 @@ namespace AwesomeMenuForWindowsPhone
                         item.NearPoint = new Point(_startPoint.X + dx * j * (BETWEEN_RADIUS - 15), _startPoint.Y + dy * j * (BETWEEN_RADIUS - 15));
                         item.FarPoint = new Point(_startPoint.X + dx * j * (BETWEEN_RADIUS + 20), _startPoint.Y + dy * j * (BETWEEN_RADIUS + 20));
                     }
-                    item.ItemTransfrom.CenterX = item.StratPoint.X;
-                    item.ItemTransfrom.CenterY = item.StratPoint.Y;
+                    item.ItemTransfrom.TranslateX = item.StratPoint.X;
+                    item.ItemTransfrom.TranslateY = item.StratPoint.Y;
                 }
 
             }
@@ -171,8 +171,8 @@ namespace AwesomeMenuForWindowsPhone
         public void SetStartPoint(Point pt)
         {
             _startPoint = pt;
-            _addButton.ItemTransfrom.CenterX = _startPoint.X;
-            _addButton.ItemTransfrom.CenterY = _startPoint.Y;
+            _addButton.ItemTransfrom.TranslateX = _startPoint.X;
+            _addButton.ItemTransfrom.TranslateY = _startPoint.Y;
             //_addButton.ItemTransfrom.CenterX = _addButton.ItemTransfrom.CenterY = 0.5;
         }
         #endregion
@@ -193,8 +193,8 @@ namespace AwesomeMenuForWindowsPhone
                     item.Tag = i;
                     item.ClickMenuItem -= Item_ClickMenuItem;
                     item.ClickMenuItem += Item_ClickMenuItem;
-                    item.ItemTransfrom.CenterX = START_POINT.X;
-                    item.ItemTransfrom.CenterY = START_POINT.Y;
+                    //item.ItemTransfrom.CenterX = START_POINT.X;
+                    //item.ItemTransfrom.CenterY = START_POINT.Y;
 
                     this.Children.Add(item);
                 }
@@ -473,7 +473,7 @@ namespace AwesomeMenuForWindowsPhone
             //Init and Start Timer
             if (_timer == null)
             {
-                _flag = this.IsExpanding ? 0 : 5;
+                _flag = this.IsExpanding ? 0 : MenuItems.Count;
                 _timer = new DispatcherTimer();
                 _timer.Interval = TIMEOFFSET;
                 _timer.Tick += (o, a) =>
@@ -524,8 +524,8 @@ namespace AwesomeMenuForWindowsPhone
                 blowUpStory.Begin();
                 blowUpStory.Completed += (o, a) =>
                 {
-                    item.ItemTransfrom.TranslateX = 0;
-                    item.ItemTransfrom.TranslateY = 0;
+                    item.ItemTransfrom.TranslateX = _startPoint.X;
+                    item.ItemTransfrom.TranslateY = _startPoint.Y;
                     item.ItemTransfrom.ScaleX = 1;
                     item.ItemTransfrom.ScaleY = 1;
                     item.Opacity = 1;
@@ -543,8 +543,8 @@ namespace AwesomeMenuForWindowsPhone
                         shrinkStory.Begin();
                         shrinkStory.Completed += (o, a) =>
                         {
-                            otherItem.ItemTransfrom.TranslateX = 0;
-                            otherItem.ItemTransfrom.TranslateY = 0;
+                            otherItem.ItemTransfrom.TranslateX = _startPoint.X;
+                            otherItem.ItemTransfrom.TranslateY = _startPoint.Y;
                             otherItem.ItemTransfrom.ScaleX = 1;
                             otherItem.ItemTransfrom.ScaleY = 1;
                             otherItem.Opacity = 1;
