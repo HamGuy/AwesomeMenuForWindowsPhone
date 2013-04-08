@@ -440,14 +440,18 @@ namespace AwesomeMenuForWindowsPhone
         {
             _isExpanding = isExpanding;
 
-            //rotate add button
+            //rotate add button //弧度
             double angle = this.IsExpanding ? -Math.PI / 4 : 0.0d;
-            var duration = TimeSpan.FromSeconds(0.2);
+            //角度
+            angle = angle * 180;
+            var duration = TimeSpan.FromSeconds(0.5);
             var sb = new Storyboard();
             sb.Duration = duration;
+            _addButton.ItemTransfrom.CenterX = _addButton.ItemTransfrom.CenterY = 0.5;
             var da = GetDoubleAnimation(duration, _addButton.ItemTransfrom.Rotation, angle);
             Storyboard.SetTarget(da, _addButton.ItemTransfrom);
             Storyboard.SetTargetProperty(da, new PropertyPath(CompositeTransform.RotationProperty));
+            sb.Children.Add(da);
             sb.Begin();
             sb.Completed += (o, a) =>
             {
@@ -544,14 +548,19 @@ namespace AwesomeMenuForWindowsPhone
                 }
                 _isExpanding = false;
 
+                //收起做的动画
+                //弧度
                 double angle = this.IsExpanding ? -Math.PI / 4 : 0;
-                Duration duration = TimeSpan.FromSeconds(0.2);
+                //角度
+                angle = angle * 180;
+                Duration duration = TimeSpan.FromSeconds(0.5);
                 _addButton.RenderTransformOrigin = new Point(0.5, 0.5);
                 var da = GetDoubleAnimation(duration, _addButton.ItemTransfrom.Rotation, angle);
                 var sb = new Storyboard();
                 //sb.Duration = duration;
                 Storyboard.SetTarget(da, _addButton.ItemTransfrom);
                 Storyboard.SetTargetProperty(da, new PropertyPath(CompositeTransform.RotationProperty));
+                sb.Children.Add(da);
                 sb.Begin();
                 sb.Completed += (o, a) =>
                 {
