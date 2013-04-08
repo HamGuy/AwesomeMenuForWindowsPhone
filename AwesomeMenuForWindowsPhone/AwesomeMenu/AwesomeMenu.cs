@@ -105,15 +105,20 @@ namespace AwesomeMenuForWindowsPhone
                 switch (Type)
                 {
                     case AwesomeMenuType.AwesomeMenuTypeUpAndRight:
+                        dx = 1;
+                        dy = -1;
                         break;
                     case AwesomeMenuType.AwesomeMenuTypeUpAndLeft:
                         dx = -1;
-                        break;
-                    case AwesomeMenuType.AwesomeMenuTypeDownAndRight:
                         dy = -1;
                         break;
+                    case AwesomeMenuType.AwesomeMenuTypeDownAndRight:
+                        dy = 1;
+                        dx = 1;
+                        break;
                     case AwesomeMenuType.AwesomeMenuTypeDownAndLeft:
-                        dy = dx = -1;
+                        dy = 1;
+                        dx = -1;
                         break;
                     case AwesomeMenuType.AwesomeMenuTypeUp:
                         isTwoDirections = false;
@@ -180,9 +185,9 @@ namespace AwesomeMenuForWindowsPhone
                 {
                     var item = MenuItems[i];
                     item.StratPoint = START_POINT;
-                    item.EndPoint = CalulateInitPoint(i, END_RADIUS, nCount);
-                    item.NearPoint = CalulateInitPoint(i, NEAR_RADIUS, nCount);
-                    item.FarPoint = CalulateInitPoint(i, FAR_RADIUS, nCount);
+                    item.EndPoint = new Point(0, 0);//CalulateInitPoint(i, END_RADIUS, nCount);
+                    item.NearPoint = new Point(0, 0);//CalulateInitPoint(i, NEAR_RADIUS, nCount);
+                    item.FarPoint = new Point(0, 0);//CalulateInitPoint(i, FAR_RADIUS, nCount);
                     item.Tag = i;
                     item.ClickMenuItem -= Item_ClickMenuItem;
                     item.ClickMenuItem += Item_ClickMenuItem;
@@ -592,7 +597,7 @@ namespace AwesomeMenuForWindowsPhone
         {
             return new Point(
                         _startPoint.X + dx * radius * Math.Sin(index * Math.PI / 2 / (nCount - 1)),
-                        _startPoint.Y - dy * radius * Math.Cos(index * Math.PI / 2 / (nCount - 1))
+                        _startPoint.Y + dy * radius * Math.Cos(index * Math.PI / 2 / (nCount - 1))
                         );
         }
 
