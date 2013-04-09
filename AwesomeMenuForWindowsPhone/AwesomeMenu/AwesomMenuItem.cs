@@ -110,15 +110,6 @@ namespace AwesomeMenuForWindowsPhone
             //_contentImage.Source = _bitmap;
             _contentImage.Source = bi;
         }
-
-        void Item_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (ClickMenuItem != null)
-            {
-                //ClickMenuItem.Invoke(this);
-                ClickMenuItem(this);
-            }
-        }
         #endregion
 
     }
