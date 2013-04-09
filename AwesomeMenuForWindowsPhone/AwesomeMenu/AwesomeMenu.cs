@@ -50,8 +50,26 @@ namespace AwesomeMenuForWindowsPhone
         private AwesomMenuItem _addButton;
         private string _addUri;
         private string _addUriHighlited;
+        private bool _tapToDismissItem = false;
         private bool _isExpanding;
-        protected bool IsExpanding
+        private AwesomeMenuRadianType awesomeMenuRadianType = AwesomeMenuRadianType.AwesomeMenuRadian90;
+        private double menuItemSpacing = 0.0;
+
+        /// <summary>
+        /// Indicator whether dismiss the menuitem when tapped
+        /// </summary>
+        private bool TapToDissmissItem
+        {
+            get { return _tapToDismissItem; }
+            set { _tapToDismissItem = value; }
+        }
+        #endregion
+
+        #region public Attribute
+        /// <summary>
+        /// 控制面板展开与关闭
+        /// </summary>
+        public bool IsExpanding
         {
             get { return _isExpanding; }
             set
@@ -60,9 +78,7 @@ namespace AwesomeMenuForWindowsPhone
                 SetExpanding(_isExpanding);
             }
         }
-        private bool _tapToDismissItem = false;
 
-        private AwesomeMenuRadianType awesomeMenuRadianType = AwesomeMenuRadianType.AwesomeMenuRadian90;
         /// <summary>
         /// 设置按钮以多少度展现
         /// </summary>
@@ -80,7 +96,6 @@ namespace AwesomeMenuForWindowsPhone
             }
         }
 
-        private double menuItemSpacing = 0.0;
         /// <summary>
         /// 每个Item的间距
         /// </summary>
@@ -97,38 +112,6 @@ namespace AwesomeMenuForWindowsPhone
             }
         }
         #endregion
-
-        /// <summary>
-        /// Indicator whether dismiss the menuitem when tapped
-        /// </summary>
-        public bool TapToDissmissItem
-        {
-            get { return _tapToDismissItem; }
-            set { _tapToDismissItem = value; }
-        }
-
-        #region Actions
-        public Action<AwesomeMenu, int> ActionDisMiss;
-        public Action<AwesomMenuItem> ActionItemOpen;
-        public Action<AwesomMenuItem> ActionItemClose;
-        #endregion
-
-        public AwesomeMenu(Rect rect, List<AwesomMenuItem> menuItems, string addUri, string addUriHigtlighted, AwesomeMenuType menuType = AwesomeMenuType.AwesomeMenuTypeDefault)
-        {
-            this.Width = rect.Width;
-            this.Height = rect.Height;
-            this.MenuItems = menuItems;
-            this._addUri = addUri;
-            this._addUriHighlited = addUriHigtlighted;
-            //this.MouseLeftButtonUp += Menu_MouseLeftButtonUp;
-            this.Background = new SolidColorBrush(Colors.Transparent);
-            this.Tap -= AwesomeMenu_Tap;
-            this.Tap += AwesomeMenu_Tap;
-            InitAddButton();
-            InitMenuItem();
-            SetType(menuType);
-            this.AwesomeMenuRadianType = AwesomeMenuForWindowsPhone.AwesomeMenuRadianType.AwesomeMenuRadian90;
-        }
 
         #region Public Methods
         public void SetType(AwesomeMenuType menuType = AwesomeMenuType.AwesomeMenuTypeDefault)
@@ -214,6 +197,34 @@ namespace AwesomeMenuForWindowsPhone
             //_addButton.ItemTransfrom.CenterX = _addButton.ItemTransfrom.CenterY = 0.5;
             InitMenuItem();
             SetType(Type);
+        }
+        #endregion
+
+        #region Actions
+        public Action<AwesomeMenu, int> ActionDisMiss;
+        public Action<AwesomMenuItem> ActionItemOpen;
+        public Action<AwesomMenuItem> ActionItemClose;
+        #endregion
+
+        #region Structure
+        public AwesomeMenu(Rect rect, List<AwesomMenuItem> menuItems, string addUri, string addUriHigtlighted, AwesomeMenuType menuType = AwesomeMenuType.AwesomeMenuTypeDefault)
+        {
+            this.Width = rect.Width;
+            this.Height = rect.Height;
+            this.MenuItems = menuItems;
+            this._addUri = addUri;
+            this._addUriHighlited = addUriHigtlighted;
+            //this.MouseLeftButtonUp += Menu_MouseLeftButtonUp;
+            this.Background = new SolidColorBrush(Colors.Transparent);
+            this.Tap -= AwesomeMenu_Tap;
+            this.Tap += AwesomeMenu_Tap;
+            InitAddButton();
+            InitMenuItem();
+            //原来没有叫设置按钮角度属性
+            //SetType(menuType);
+            //现在有了更改一下代码
+            Type = menuType;
+            this.AwesomeMenuRadianType = AwesomeMenuForWindowsPhone.AwesomeMenuRadianType.AwesomeMenuRadian90;
         }
         #endregion
 
