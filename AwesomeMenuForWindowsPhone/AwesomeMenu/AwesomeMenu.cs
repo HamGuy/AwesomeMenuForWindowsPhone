@@ -108,7 +108,11 @@ namespace AwesomeMenuForWindowsPhone
             set
             {
                 menuItemSpacing = value;
-                SetType(Type);
+                if (this.AwesomeMenuRadianType == AwesomeMenuForWindowsPhone.AwesomeMenuRadianType.AwesomeMenuRadianNone)
+                {
+                    ConversionMenuItemSpacing();
+                    SetType(Type);
+                }
             }
         }
         #endregion
@@ -551,23 +555,23 @@ namespace AwesomeMenuForWindowsPhone
             {
                 case AwesomeMenuRadianType.AwesomeMenuRadian90:
                     {
-                        this.MenuItemSpacing = (90 / (MenuItems.Count - 1));
+                        this.menuItemSpacing = (90 / (MenuItems.Count - 1));
                     }
                     break;
                 case AwesomeMenuRadianType.AwesomeMenuRadian180:
                     {
-                        this.MenuItemSpacing = (180 / (MenuItems.Count - 1));
+                        this.menuItemSpacing = (180 / (MenuItems.Count - 1));
                     }
                     break;
                 case AwesomeMenuRadianType.AwesomeMenuRadian360:
                     {
-                        this.MenuItemSpacing = (360 / (MenuItems.Count - 1));
+                        this.menuItemSpacing = (360 / (MenuItems.Count - 1));
                     }
                     break;
                 default:
                     if (this.MenuItemSpacing == 0.0 || double.IsNaN(this.MenuItemSpacing))
                     {
-                        this.MenuItemSpacing = (90 / (MenuItems.Count - 1));
+                        this.menuItemSpacing = (90 / (MenuItems.Count - 1));
                     }
                     break;
             }

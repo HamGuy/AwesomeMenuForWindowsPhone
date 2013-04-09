@@ -54,8 +54,8 @@ namespace AwesomeMenuForWindowsPhone
                         
             menu.SetType(AwesomeMenuType.AwesomeMenuTypeUpAndLeft);
             //menu.SetStartPoint(new Point(150, 50));
-            //menu.AwesomeMenuRadianType = AwesomeMenuRadianType.AwesomeMenuRadian180;
-            //menu.MenuItemSpacing = 50;
+            menu.AwesomeMenuRadianType = AwesomeMenuRadianType.AwesomeMenuRadianNone;
+            menu.MenuItemSpacing = 0;
             ContentPanel.Children.Add(menu);
         }
     }
