@@ -29,31 +29,67 @@ namespace AwesomeMenuForWindowsPhone
 {
     public partial class MainPage : PhoneApplicationPage
     {
+        bool closeByTapItem = false;
         // 构造函数
         public MainPage()
         {
             InitializeComponent();
-            InitPathMenu();
+            //InitPathMenu();
+            ContentPanel.MouseLeftButtonUp += ContentPanel_MouseLeftButtonUp;
+        }
+
+        void ContentPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Rect rc = new Rect(0, LayoutRoot.ActualHeight - TitlePanel.ActualHeight, ContentPanel.ActualWidth, ContentPanel.ActualHeight);
+            Point pt = e.GetPosition(ContentPanel);
+            var items = new List<AwesomMenuItem>();
+
+            items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
+            items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
+            items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
+            items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png")); 
+            
+            var menu = new AwesomeMenu(rc, items, "Images/icon-plus.png", "Images/bg-addbutton.png", pt);
+            menu.TapToDissmissItem = false;
+            menu.Margin = ContentPanel.Margin;
+            Grid.SetRow(menu, 1);
+            //menu.Background = new SolidColorBrush(Colors.Cyan);
+            //ContentPanel.Children.Add(menu); //不能加在这里面，否则会出现异常
+            LayoutRoot.Children.Add(menu);
+            menu.ActionExpened += () =>
+            {
+            };
+            menu.ActionClosed += (item) =>
+            {
+                Dispatcher.BeginInvoke(delegate
+                {
+                    this.LayoutRoot.Children.Remove(menu);
+                    if(menu!=null)
+                    menu.Children.Clear();
+                    menu = null;
+                });
+            };
         }
 
         void InitPathMenu()
         {
-            Rect rc = new Rect { Width = 400, Height = 400 };
+            Rect rc = new Rect { Width =480, Height = 600 };
             var items = new List<AwesomMenuItem>();
 
             items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
             items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
             items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
             items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
-            items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
-            items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
-            items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
+            //items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
+            //items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
+            //items.Add(new AwesomMenuItem("Images/icon-star.png", "Images/bg-menuitem.png"));
 
             //构造的时候可以设置指定方法也可以通过方法来设置，都可以
-            var menu = new AwesomeMenu(rc, items, "Images/icon-plus.png", "Images/bg-addbutton.png", AwesomeMenuType.AwesomeMenuTypeDownAndLeft);
-                        
-            menu.SetType(AwesomeMenuType.AwesomeMenuTypeUpAndLeft);
-            //menu.SetStartPoint(new Point(150, 50));
+            var menu = new AwesomeMenu(rc, items, "Images/icon-plus.png", "Images/bg-addbutton.png", AwesomeMenuType.AwesomeMenuTypeUpAndRight);
+            //var menu = new AwesomeMenu(rc, items, "Images/icon-plus.png", "Images/bg-addbutton.png", new Point(20, 30));
+            //menu.Background = new SolidColorBrush(Colors.Cyan);
+            //menu.SetType(AwesomeMenuType.AwesomeMenuTypeUpAndLeft);
+            //menu.SetStartPoint(new Point(0, 150));
             menu.AwesomeMenuRadianType = AwesomeMenuRadianType.AwesomeMenuRadianNone;
             menu.MenuItemSpacing = 0;
             ContentPanel.Children.Add(menu);

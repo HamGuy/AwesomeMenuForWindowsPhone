@@ -40,7 +40,7 @@ namespace AwesomeMenuForWindowsPhone
         }
         private Point _startPoint;
         private AwesomeMenuType _type = AwesomeMenuType.AwesomeMenuTypeDefault;
-        private Point START_POINT = new Point(100, 130);
+        private Point START_POINT = new Point(0, 0);
         private const double NEAR_RADIUS = 130d;
         private const double END_RADIUS = 140d;
         private const double FAR_RADIUS = 160d;
@@ -50,15 +50,15 @@ namespace AwesomeMenuForWindowsPhone
         private AwesomMenuItem _addButton;
         private string _addUri;
         private string _addUriHighlited;
-        private bool _tapToDismissItem = false;
+        private bool _tapToDismissItem = true;
         private bool _isExpanding;
         private AwesomeMenuRadianType awesomeMenuRadianType = AwesomeMenuRadianType.AwesomeMenuRadian90;
         private double menuItemSpacing = 0.0;
-
+        private bool _closedByTapMenu = false;
         /// <summary>
         /// Indicator whether dismiss the menuitem when tapped
         /// </summary>
-        private bool TapToDissmissItem
+        public bool TapToDissmissItem
         {
             get { return _tapToDismissItem; }
             set { _tapToDismissItem = value; }
@@ -194,8 +194,8 @@ namespace AwesomeMenuForWindowsPhone
         public void SetStartPoint(Point pt)
         {
             this.Children.Clear();
-            InitAddButton();
             _startPoint = START_POINT = pt;
+            InitAddButton();
             _addButton.ItemTransfrom.TranslateX = _startPoint.X;
             _addButton.ItemTransfrom.TranslateY = _startPoint.Y;
             //_addButton.ItemTransfrom.CenterX = _addButton.ItemTransfrom.CenterY = 0.5;
@@ -205,9 +205,9 @@ namespace AwesomeMenuForWindowsPhone
         #endregion
 
         #region Actions
-        public Action<AwesomeMenu, int> ActionDisMiss;
-        public Action<AwesomMenuItem> ActionItemOpen;
-        public Action<AwesomMenuItem> ActionItemClose;
+        //public Action<AwesomeMenu, int> ActionDisMiss;
+        public Action ActionExpened;
+        public Action<AwesomMenuItem> ActionClosed;
         #endregion
 
         #region Structure
@@ -230,10 +230,31 @@ namespace AwesomeMenuForWindowsPhone
             Type = menuType;
             this.AwesomeMenuRadianType = AwesomeMenuForWindowsPhone.AwesomeMenuRadianType.AwesomeMenuRadian90;
         }
+
+        public AwesomeMenu(Rect rect, List<AwesomMenuItem> menuItems, string addUri, string addUriHigtlighted, Point startPoint)
+        {
+            this.Width = rect.Width;
+            this.Height = rect.Height;
+            this.MenuItems = menuItems;
+            this._addUri = addUri;
+            this._addUriHighlited = addUriHigtlighted;
+            this.Background = new SolidColorBrush(Colors.Transparent);
+            this.Tap -= AwesomeMenu_Tap;
+            this.Tap += AwesomeMenu_Tap;
+            this.VerticalAlignment = VerticalAlignment.Top;
+            this.HorizontalAlignment = HorizontalAlignment.Left;
+            Type = InitTypeByStartPoint(rect,startPoint);
+            _startPoint = START_POINT = startPoint;
+            this.AwesomeMenuRadianType = AwesomeMenuForWindowsPhone.AwesomeMenuRadianType.AwesomeMenuRadian90;
+            InitAddButton(true); //加个条件，设置对齐方式为左对齐
+            InitMenuItem(true);
+            SetType(Type);
+            this.IsExpanding = true;
+        }
         #endregion
 
         #region Private methods
-        private void InitMenuItem()
+        private void InitMenuItem(bool byPopint = false)
         {
             if (MenuItems != null || MenuItems.Count > 0)
             {
@@ -248,20 +269,27 @@ namespace AwesomeMenuForWindowsPhone
                     item.Tag = i;
                     item.ClickMenuItem -= Item_ClickMenuItem;
                     item.ClickMenuItem += Item_ClickMenuItem;
-                    //item.ItemTransfrom.CenterX = START_POINT.X;
-                    //item.ItemTransfrom.CenterY = START_POINT.Y;
-
+                    if (byPopint)
+                    {
+                        item.VerticalAlignment = VerticalAlignment.Top;
+                        item.HorizontalAlignment = HorizontalAlignment.Left;
+                    }
                     this.Children.Add(item);
                 }
             }
         }
 
-        private void InitAddButton()
+        private void InitAddButton(bool byPopint = false)
         {
             _addButton = new AwesomMenuItem(_addUri, _addUriHighlited);
             _addButton.ItemTransfrom.TranslateX = _startPoint.X;
             _addButton.ItemTransfrom.TranslateY = _startPoint.Y;
             _addButton.Tag = 999;
+            if (byPopint)
+            {
+                _addButton.VerticalAlignment = VerticalAlignment.Top;
+                _addButton.HorizontalAlignment = HorizontalAlignment.Left;
+            }
             Canvas.SetZIndex(_addButton, 10);
             _addButton.ClickMenuItem -= Item_ClickMenuItem;
             _addButton.ClickMenuItem += Item_ClickMenuItem;
@@ -382,8 +410,8 @@ namespace AwesomeMenuForWindowsPhone
                 sb.Children.Clear();
                 da = null;
                 sb = null;
-                if (ActionItemOpen != null)
-                    ActionItemOpen(item);
+                if (ActionExpened != null)
+                    ActionExpened();
             };
             _flag++;
         }
@@ -493,8 +521,14 @@ namespace AwesomeMenuForWindowsPhone
                 sb.Children.Clear();
                 da = null;
                 sb = null;
-                if (ActionItemClose != null)
-                    ActionItemClose(item);
+                if (ActionClosed != null)
+                    if (_closedByTapMenu == true)
+                    {
+                        _closedByTapMenu = false;
+                        ActionClosed(null);
+                    }
+                    else
+                        ActionClosed(item);
             };
             _flag--;
         }
@@ -576,6 +610,41 @@ namespace AwesomeMenuForWindowsPhone
                     break;
             }
         }
+
+        private AwesomeMenuType InitTypeByStartPoint(Rect rc, Point pt)
+        {
+            Rect rcLU = new Rect (0, 0, END_RADIUS, END_RADIUS );
+            Rect rcRU = new Rect(rc.Width-END_RADIUS, 0, END_RADIUS, END_RADIUS);
+            Rect rcLD = new Rect(0, rc.Height - END_RADIUS, END_RADIUS, END_RADIUS);
+            Rect rcRD = new Rect(rc.Width - END_RADIUS, rc.Height - END_RADIUS, END_RADIUS, END_RADIUS);
+            
+            Rect rcUp = new Rect(END_RADIUS, 0, rc.Width - 2 * END_RADIUS, END_RADIUS);
+            Rect rcLeft = new Rect(0, END_RADIUS,  END_RADIUS,rc.Height-2*END_RADIUS);
+            Rect rcCenter = new Rect(END_RADIUS, END_RADIUS, rc.Width - 2 * END_RADIUS, rc.Height - 2 * END_RADIUS);
+            Rect rcRight = new Rect(rc.Width - END_RADIUS, END_RADIUS, END_RADIUS, rc.Height - 2 * END_RADIUS);
+            Rect rcDown = new Rect(END_RADIUS, rc.Height-END_RADIUS, rc.Width - 2 * END_RADIUS,  END_RADIUS);
+
+            if (rcLU.Contains(pt))
+                return AwesomeMenuType.AwesomeMenuTypeDownAndRight;
+            else if (rcRU.Contains(pt))
+                return AwesomeMenuType.AwesomeMenuTypeDownAndLeft;
+            else if (rcLD.Contains(pt))
+                return AwesomeMenuType.AwesomeMenuTypeUpAndRight;
+            else if (rcRD.Contains(pt))
+                return AwesomeMenuType.AwesomeMenuTypeUpAndLeft;
+            else if (rcUp.Contains(pt))
+                return AwesomeMenuType.AwesomeMenuTypeDown;
+            else if (rcLeft.Contains(pt))
+                return AwesomeMenuType.AwesomeMenuTypeRight;
+            else if (rcRight.Contains(pt))
+                return AwesomeMenuType.AwesomeMenuTypeLeft;
+            else if (rcDown.Contains(pt))
+                return AwesomeMenuType.AwesomeMenuTypeUp;
+            else
+                return AwesomeMenuType.AwesomeMenuTypeUpAndRight;
+
+        }
+
         #endregion
 
         #region Event Handler
@@ -588,6 +657,7 @@ namespace AwesomeMenuForWindowsPhone
             //{
             //    _isExpanding = false;
             //}
+            _closedByTapMenu = true;
             if (this.IsExpanding)
             {
                 this.IsExpanding = false;
@@ -602,7 +672,7 @@ namespace AwesomeMenuForWindowsPhone
                 return;
             }
 
-            if (!TapToDissmissItem)
+            if (TapToDissmissItem)
             {
                 //blowup current button
                 Point pt = new Point(item.ItemTransfrom.TranslateX, item.ItemTransfrom.TranslateY);
@@ -666,8 +736,8 @@ namespace AwesomeMenuForWindowsPhone
             }
 
 
-            if (ActionDisMiss != null)
-                ActionDisMiss(this, Convert.ToInt32(item.Tag));
+            //if (ActionDisMiss != null)
+            //    ActionDisMiss(this, Convert.ToInt32(item.Tag));
 
         }
         #endregion
