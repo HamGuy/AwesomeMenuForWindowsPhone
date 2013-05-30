@@ -1,13 +1,17 @@
 AwesomeMenuForWindowsPhone
 ==========================
+Update at 2013-04-11
+
+Add the mutidirection self-adapt.
+
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Update at 2013-04-04
 
-fix the the mentioned bugs yesterday by Mr_more (matong38@gmail.com).
+fix the the mentioned bugs yesterday by 627155mat (matong38@gmail.com).
 
-Thanks for the hekp of Mr_more!
+Thanks for the hekp of 627155mat!
 
 The MainPage.xaml.cs showed how to use it. 
 
