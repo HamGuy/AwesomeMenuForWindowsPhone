@@ -34,8 +34,8 @@ namespace AwesomeMenuForWindowsPhone
         public MainPage()
         {
             InitializeComponent();
-            //InitPathMenu();
-            ContentPanel.MouseLeftButtonUp += ContentPanel_MouseLeftButtonUp;
+            InitPathMenu();
+            //ContentPanel.MouseLeftButtonUp += ContentPanel_MouseLeftButtonUp;
         }
 
         void ContentPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -67,8 +67,34 @@ namespace AwesomeMenuForWindowsPhone
                     if(menu!=null)
                     menu.Children.Clear();
                     menu = null;
+                    ProcessItem(item);
                 });
             };
+        }
+
+        private void ProcessItem(AwesomMenuItem item)
+        {
+            if (item != null)
+            {
+                
+                if (item != null && !item.Tag.Equals(999))
+                {
+                    int index = Convert.ToInt32(item.Tag);
+                    MessageBox.Show(string.Format("Item {0} Clicked!", index));
+                    //switch (index)
+                    //{
+                    //    case 0:
+                    //        MessageBox.Show(string.Format("Item {0} Clicked!", index));
+                    //        break;
+                    //    case 1:
+                    //        MessageBox.Show(string.Format("Item {0} Clicked!", index));
+                    //        break;
+                    //    case 2:
+                    //        break;
+                    //}
+                }
+            }
+
         }
 
         void InitPathMenu()
@@ -90,9 +116,18 @@ namespace AwesomeMenuForWindowsPhone
             //menu.Background = new SolidColorBrush(Colors.Cyan);
             //menu.SetType(AwesomeMenuType.AwesomeMenuTypeUpAndLeft);
             //menu.SetStartPoint(new Point(0, 150));
+
+            menu.TapToDissmissItem = true;
             menu.AwesomeMenuRadianType = AwesomeMenuRadianType.AwesomeMenuRadianNone;
             menu.MenuItemSpacing = 0;
             ContentPanel.Children.Add(menu);
+            menu.ActionClosed += (item) =>
+            {
+                Dispatcher.BeginInvoke(delegate
+                {
+                    ProcessItem(item);
+                });
+            };
         }
     }
 }

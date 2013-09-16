@@ -528,7 +528,7 @@ namespace AwesomeMenuForWindowsPhone
                         ActionClosed(null);
                     }
                     else
-                        ActionClosed(item);
+                        ActionClosed(_addButton);
             };
             _flag--;
         }
@@ -734,6 +734,9 @@ namespace AwesomeMenuForWindowsPhone
                     sb = null;
                 };
             }
+
+            if (ActionClosed != null)
+                ActionClosed(item);
 
 
             //if (ActionDisMiss != null)
